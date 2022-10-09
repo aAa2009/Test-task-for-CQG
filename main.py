@@ -1,3 +1,6 @@
+import argparse
+
+
 class Line:
     def __init__(self, line):
         self.text = line
@@ -19,7 +22,7 @@ class Line:
 
 
 def import_configuration(configuration = {}):
-    with open('configuration.txt', 'r') as file:
+    with open(args.conf, 'r') as file:
         for line in file:
             key, value = line.strip().split("=")
             configuration[key] = value
@@ -27,13 +30,28 @@ def import_configuration(configuration = {}):
 
 
 def import_test_data(configuration, lines = []):
-    with open('test_data.txt', 'r') as file:
+    with open(args.input, 'r') as file:
         for line in file:
             line = Line(line.strip())
             line.change_line(configuration)
             lines.append(line)
     return lines
 
+
+parser = argparse.ArgumentParser(description='Parser to define configuration files and test data')
+parser.add_argument(
+    '--conf',
+    type=str,
+    default='configuration.txt',
+    help='path to configuration file (default: configuration.txt)'
+)
+parser.add_argument(
+    '--input',
+    type=str,
+    default='test_data.txt',
+    help='path to test data file (default: test_data.txt)'
+)
+args = parser.parse_args()
 
 configuration = import_configuration()
 lines = import_test_data(configuration)
